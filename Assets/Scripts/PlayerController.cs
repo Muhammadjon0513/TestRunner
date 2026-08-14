@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private float _lastFrameFingerPositionX;
     private float _moveFactorX;
     public bool isPlaying = false;
+    public bool canSwerve = true; // Marraga yetganda swerve'ni o'chirish uchun
 
     private Animator _animator;
 
@@ -26,22 +27,25 @@ public class PlayerController : MonoBehaviour
         transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
 
         // Boshqaruv (Swerve)
-        if (Input.GetMouseButtonDown(0))
+        if (canSwerve)
         {
-            _lastFrameFingerPositionX = Input.mousePosition.x;
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            _moveFactorX = Input.mousePosition.x - _lastFrameFingerPositionX;
-            _lastFrameFingerPositionX = Input.mousePosition.x;
+            if (Input.GetMouseButtonDown(0))
+            {
+                _lastFrameFingerPositionX = Input.mousePosition.x;
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                _moveFactorX = Input.mousePosition.x - _lastFrameFingerPositionX;
+                _lastFrameFingerPositionX = Input.mousePosition.x;
 
-            float swerveAmount = (_moveFactorX / Screen.width) * swerveSpeed * 100f * Time.deltaTime;
-            float targetX = transform.position.x + swerveAmount;
-            
-            // Yo'ldan tushib ketmaslik uchun cheklash
-            targetX = Mathf.Clamp(targetX, -maxHorizontalLimit, maxHorizontalLimit);
-            
-            transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
+                float swerveAmount = (_moveFactorX / Screen.width) * swerveSpeed * 100f * Time.deltaTime;
+                float targetX = transform.position.x + swerveAmount;
+                
+                // Yo'ldan tushib ketmaslik uchun cheklash
+                targetX = Mathf.Clamp(targetX, -maxHorizontalLimit, maxHorizontalLimit);
+                
+                transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
+            }
         }
     }
 
